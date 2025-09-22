@@ -32,7 +32,17 @@
     /*=================================
         JS Index End
     ==================================*/
-    /*
+
+    function includeHTML(selector, file) {
+      $(selector).load(file);
+    }
+
+    $(document).ready(function () {
+      includeHTML("#mobile-menu-container", "/assets/components/mobile-menu.html");
+      includeHTML("header", "/assets/components/header.html");
+      includeHTML("footer", "/assets/components/footer.html");
+      includeHTML("#preloader-container", "/assets/components/preloader.html");
+    });
 
   /*---------- 01. On Load Function ----------*/
     $(window).on("load", function () {
@@ -51,89 +61,103 @@
         });
     }
 
-    /*---------- 03. Mobile Menu ----------*/
+    /*---------- 03. Mobile Menu (respeta click en .th-menu-area) ----------*/
     $.fn.thmobilemenu = function (options) {
-        var opt = $.extend(
-            {
-                menuToggleBtn: ".th-menu-toggle",
-                bodyToggleClass: "th-body-visible",
-                subMenuClass: "th-submenu",
-                subMenuParent: "menu-item-has-children",
-                thSubMenuParent: "th-item-has-children",
-                subMenuParentToggle: "th-active",
-                meanExpandClass: "th-mean-expand",
-                appendElement: '<span class="th-mean-expand"></span>',
-                subMenuToggleClass: "th-open",
-                toggleSpeed: 400,
-            },
-            options
-        );
+      var opt = $.extend({
+        menuToggleBtn: ".th-menu-toggle",
+        bodyToggleClass: "th-body-visible",
+        subMenuClass: "th-submenu",
+        subMenuParent: "menu-item-has-children",
+        thSubMenuParent: "th-item-has-children",
+        subMenuParentToggle: "th-active",
+        meanExpandClass: "th-mean-expand",
+        appendElement: '<span class="th-mean-expand"></span>',
+        subMenuToggleClass: "th-open",
+        toggleSpeed: 400,
+        panelSel: ".th-menu-area" // ← tu panel visible
+      }, options);
 
-        return this.each(function () {
-            var menu = $(this); // Select menu
+      return this.each(function () {
+        var $menu = $(this); // wrapper .th-menu-wrapper
 
-            // Menu Show & Hide
-            function menuToggle() {
-                menu.toggleClass(opt.bodyToggleClass);
+        function isOpen()  { return $menu.hasClass(opt.bodyToggleClass); }
+        function openMenu(){ $menu.addClass(opt.bodyToggleClass); }
+        function closeMenu(){
+          $menu.removeClass(opt.bodyToggleClass);
+          // Colapsar submenús
+          $menu.find("." + opt.subMenuClass)
+              .removeClass(opt.subMenuToggleClass)
+              .hide()
+              .parent().removeClass(opt.subMenuParentToggle);
+        }
+        function toggleMenu(){ isOpen() ? closeMenu() : openMenu(); }
 
-                // collapse submenu on menu hide or show
-                var subMenu = "." + opt.subMenuClass;
-                $(subMenu).each(function () {
-                    if ($(this).hasClass(opt.subMenuToggleClass)) {
-                        $(this).removeClass(opt.subMenuToggleClass);
-                        $(this).css("display", "none");
-                        $(this).parent().removeClass(opt.subMenuParentToggle);
-                    }
-                });
-            }
-
-            // Class Set Up for every submenu
-            menu.find("." + opt.subMenuParent).each(function () {
-                var submenu = $(this).find("ul");
-                submenu.addClass(opt.subMenuClass);
-                submenu.css("display", "none");
-                $(this).addClass(opt.subMenuParent);
-                $(this).addClass(opt.thSubMenuParent); // Add th-item-has-children class
-                $(this).children("a").append(opt.appendElement);
-            });
-
-            // Toggle Submenu
-            function toggleDropDown($element) {
-                var submenu = $element.children("ul");
-                if (submenu.length > 0) {
-                    $element.toggleClass(opt.subMenuParentToggle);
-                    submenu.slideToggle(opt.toggleSpeed);
-                    submenu.toggleClass(opt.subMenuToggleClass);
-                }
-            }
-
-            // Submenu toggle Button
-            var itemHasChildren = "." + opt.thSubMenuParent + " > a";
-            $(itemHasChildren).each(function () {
-                $(this).on("click", function (e) {
-                    e.preventDefault();
-                    toggleDropDown($(this).parent());
-                });
-            });
-
-            // Menu Show & Hide On Toggle Btn click
-            $(opt.menuToggleBtn).each(function () {
-                $(this).on("click", function () {
-                    menuToggle();
-                });
-            });
-
-            // Hide Menu On outside click
-            menu.on("click", function (e) {
-                e.stopPropagation();
-                menuToggle();
-            });
-
-            // Stop Hide full menu on menu click
-            menu.find("div").on("click", function (e) {
-                e.stopPropagation();
-            });
+        // ----- Setup submenús (si existen en el fragmento) -----
+        $menu.find("." + opt.subMenuParent).each(function () {
+          var $li = $(this), $submenu = $li.children("ul");
+          $submenu.addClass(opt.subMenuClass).hide();
+          $li.addClass(opt.thSubMenuParent);
+          if ($li.children("a").find("." + opt.meanExpandClass).length === 0) {
+            $li.children("a").append(opt.appendElement);
+          }
         });
+
+        // Delegación: abrir/cerrar submenús
+        $menu.on("click", "." + opt.thSubMenuParent + " > a", function (e) {
+          var $li = $(this).parent(), $submenu = $li.children("ul");
+          if ($submenu.length) {
+            e.preventDefault();
+            $li.toggleClass(opt.subMenuParentToggle);
+            $submenu.slideToggle(opt.toggleSpeed).toggleClass(opt.subMenuToggleClass);
+          }
+        });
+
+        // ----- Toggle con cualquier .th-menu-toggle -----
+        // Botón del header (fuera del wrapper)
+        $(document).on("click", opt.menuToggleBtn, function (e) {
+          if ($(e.target).closest($menu).length) return; // el interno lo maneja el handler de abajo
+          e.preventDefault();
+          toggleMenu();
+        });
+        // Botón interno (dentro del panel)
+        $menu.on("click", opt.menuToggleBtn, function (e) {
+          e.preventDefault();
+          toggleMenu();
+          e.stopPropagation(); // no burbujes al document
+        });
+
+        // ----- Cerrar según dónde se clickea -----
+        // a) Click dentro del wrapper:
+        $menu.on("click", function (e) {
+          // Importante: calcular el panel dinámicamente (carga por .load)
+          var insidePanel = $(e.target).closest(opt.panelSel).length > 0 &&
+                            $(e.target).closest($menu).length > 0;
+          var isToggle = $(e.target).closest(opt.menuToggleBtn).length > 0;
+
+          if (!insidePanel && !isToggle && isOpen()) {
+            // Clic en overlay interno del wrapper → cerrar
+            closeMenu();
+            return;
+          }
+          if (insidePanel && !isToggle) {
+            // Clic dentro del panel NO cierra
+            e.stopPropagation();
+          }
+        });
+
+        // b) Click completamente fuera del wrapper:
+        $(document).on("click", function (e) {
+          if (!isOpen()) return;
+          var outsideWrapper = $(e.target).closest($menu[0]).length === 0;
+          var isToggle = $(e.target).closest(opt.menuToggleBtn).length > 0;
+          if (outsideWrapper && !isToggle) closeMenu();
+        });
+
+        // c) ESC
+        $(document).on("keyup", function (e) {
+          if (e.key === "Escape" && isOpen()) closeMenu();
+        });
+      });
     };
 
     $(".th-menu-wrapper").thmobilemenu();
