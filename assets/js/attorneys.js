@@ -14,7 +14,7 @@ $(function () {
   var attorneys = [
     {
       name: "Anthony Giancarlo Torres Quiroz",
-      role: "Abogado y socio fundador",
+      role: "Abogado y Socio Fundador",
       img: "assets/img/team/team_2_1.jpg",
       description: "Con una sólida formación en Derecho por la UTP y maestría en Ciencias Penales de la Universidad de San Martín de Porres, lidero como socio fundador del Estudio de Abogados Torres Consultores & Asociados S.A.C. Mi enfoque está en la investigación penal, fortaleciendo la defensa y estrategia legal con una meticulosa atención al detalle. Realicé diversos estudios académicos a nivel nacional e internacional en Lavado de Activos, Crimen Organizado e Inteligencia Artificial. La colaboración y el compromiso con la excelencia definen nuestra práctica, asegurando resultados óptimos para nuestros clientes.",
     },
@@ -60,7 +60,7 @@ $(function () {
   }
 
   function renderAttorney(att) {
-    if (!att) return;
+    if (!att) window.location.href = "staff-de-abogados.html";
     $(".team-about_title").html(att.name);
     $(".team-about_desig").html(att.role);
     $(".team-about_text").html(att.description);

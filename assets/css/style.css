@@ -9814,11 +9814,13 @@ ul.comment-list .th-comment-item:has(.children) .th-post-comment {
   border-radius: 50%;
   height: 70px;
   width: 70px;
-  line-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .logo-icon-wrap .logo-icon img {
-  width: 49px;
+  width: 56px;
 }
 
 .logo-icon-wrap__text {
