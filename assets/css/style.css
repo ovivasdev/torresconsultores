@@ -1270,10 +1270,10 @@ textarea.is-invalid {
   top: 0px;
   padding: 0;
   line-height: 1;
-  width: 33px;
-  height: 33px;
+  width: 42px;
+  height: 42px;
   line-height: 35px;
-  font-size: 18px;
+  font-size: 24px;
   z-index: 1;
   color: var(--white-color);
   background-color: var(--theme-color);
@@ -1480,8 +1480,8 @@ textarea.is-invalid {
   right: 0;
   top: 0;
   bottom: 0;
-  z-index: 999;
-  background-color: var(--dark-color);
+  z-index: 1000;
+  background-color: #000000;
 }
 
 .preloader .th-btn {
@@ -1941,7 +1941,7 @@ textarea.is-invalid {
   cursor: pointer;
   display: block;
   border-radius: 50px;
-  z-index: 10000;
+  z-index: 999;
   opacity: 1;
   visibility: hidden;
   -webkit-transform: translateY(45px);
@@ -27060,8 +27060,8 @@ textarea {
   position: fixed;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 9999999;
+  background: #000000;
+  z-index: 1000;
   top: 0;
   left: 0;
   display: flex;
