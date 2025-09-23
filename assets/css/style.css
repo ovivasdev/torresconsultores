@@ -27206,3 +27206,13 @@ textarea {
   .signature {
     max-width: 240px;
   }
+
+  .w-sm-100-auto {
+  width: 100% !important;
+}
+
+@media (min-width: 768px) {
+  .w-sm-100-auto {
+    width: auto !important;
+  }
+}
