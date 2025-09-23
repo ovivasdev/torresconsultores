@@ -5636,6 +5636,17 @@ ol.wp-block-rss {
   /* Medium Large devices */
 }
 
+.header-button .th-btn {
+  display: flex;
+  align-items: center;
+  padding: 14px 24px;
+}
+
+.header-button .th-btn .icon-contact-mail {
+  font-size: 2rem;
+  padding-right: 6px;
+}
+
 @media (max-width: 1500px) {
   .header-button {
     gap: 12px;
@@ -15672,6 +15683,11 @@ textarea {
 
 .counter-card-wrap .divider:last-of-type {
   display: none;
+}
+
+
+.counter-card .box-icon {
+  min-width: 60px;
 }
 
 .counter-card .box-number {
