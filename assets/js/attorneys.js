@@ -1,14 +1,13 @@
 $(function () {
-  // Utilidad: slug = name -> minuscula, sin tildes, espacios -> "-"
   function makeSlug(name) {
     return name
       .toLowerCase()
-      .normalize("NFD")              // separa letras de tildes
-      .replace(/[\u0300-\u036f]/g, "") // elimina tildes
-      .replace(/ñ/g, "n")            // reemplaza ñ
-      .replace(/[^a-z0-9\s-]/g, "")  // elimina caracteres no alfanuméricos
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/ñ/g, "n")
+      .replace(/[^a-z0-9\s-]/g, "")
       .trim()
-      .replace(/\s+/g, "-");         // espacios -> guiones
+      .replace(/\s+/g, "-");
   }
 
   var attorneys = [
