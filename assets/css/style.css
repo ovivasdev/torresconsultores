@@ -6465,10 +6465,6 @@ ol.wp-block-rss {
   color: var(--white-color);
 }
 
-.th-widget-contact {
-  max-width: 265px;
-}
-
 .footer-newsletter {
   display: -webkit-box;
   display: -webkit-flex;
@@ -7402,6 +7398,12 @@ ol.wp-block-rss {
   max-width: 280px;
 }
 
+@media (max-width: 575px) {
+  .th-widget-contact {
+    max-width: 100%;
+  }
+}
+
 .th-widget-contact .footer-info-title {
   font-size: 20px;
   color: var(--white-color);
@@ -7451,6 +7453,24 @@ ol.wp-block-rss {
 
 .info-box_link:hover {
   color: var(--theme-color);
+}
+
+@media (max-width: 575px) {
+  .info-box{
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .info-box_icon {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .info-contnt {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 /* footer 3 ---------------------------------- */
